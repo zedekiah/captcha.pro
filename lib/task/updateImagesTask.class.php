@@ -50,6 +50,7 @@ EOF;
       curl_close ($ch);
       fclose($fp);
       $i++;
+      /* it works, mutherfucker */
     endforeach;
   }
 }
