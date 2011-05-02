@@ -1,0 +1,27 @@
+Word:
+  columns:
+    name:		{ type: string(255), notnull: true, unique: true }
+  relations:
+    Groups:
+      class:	SynonymGroup
+      refClass:	WordSynonymGroup
+    
+SynonymGroup:
+  columns:
+    description:	{ type: string(255), notnull: false }
+
+WordSynonymGroup:
+  columns:
+    word_id:		{ type: integer, notnull: true, primary: true }
+    synonym_group_id:	{ type: integer, notnull: true, primary: true }
+  relations:
+    Word:
+      local:	word_id
+      foreign:	id
+      onDelete:	CASCADE
+      onUpdate:	CASCADE
+    SynonymGroup:
+      local:	synonym_group_id
+      foreign:	id
+      onDelete:	CASCADE
+      onUpdate:	CASCADE
