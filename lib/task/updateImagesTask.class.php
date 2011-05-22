@@ -34,35 +34,24 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
     // add your code here
+    $search = 'Сиськи Семенович';
+    $json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&as_filetype=jpg&rsz=8&q='.urlencode($search).'&start=0');
+    $data = json_decode($json);
+
+    $data->responseData->cursor->estimatedResultCount;
     $i = 0;
-
-    $words = Doctrine_Core::getTable('Word')->createQuery()->execute();
-    foreach ($words as $word) {
-
-	$word = $word->toArray();
-	$word = $word['name'];
-	echo $word."\n";
-
-	$search = $word;
-	$json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q='.urlencode($search).'&start=0');
-	$data = json_decode($json);
-
-	foreach ($data->responseData->results as $v){
-
-	    $data->responseData->cursor->estimatedResultCount;
-	    $ch = curl_init();
-	    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
-	    $len = strlen($v->unescapedUrl);
-	    $filetype = substr($v->unescapedUrl, $len-3, $len);
-	    echo sfConfig::get('sf_root_dir').'/web/images/' . $i . '_image.'.$filetype."\n";
-	    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/' . $i . '_image.jpg', 'w');
-	    curl_setopt($ch, CURLOPT_FILE, $fp);
-	    curl_exec ($ch);
-	    curl_close ($ch);
-	    fclose($fp);
-	    $i++;
-
-	}
-    }
+    foreach ($data->responseData->results as $v):
+      $ch = curl_init();
+      curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
+      echo sfConfig::get('sf_root_dir').'/web/images/' . $i . '_image.jpg';
+      $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/' . $i . '_image.jpg', 'w');
+      curl_setopt($ch, CURLOPT_FILE, $fp);
+      curl_exec ($ch);
+      curl_close ($ch);
+      fclose($fp);
+      $i++;
+      /* it works, mutherfucker */
+    endforeach;
+    //How about that
   }
 }
