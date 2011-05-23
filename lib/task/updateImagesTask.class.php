@@ -54,13 +54,39 @@ EOF;
 	    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
 	    $filetype = substr(strrchr($v->unescapedUrl,'.'),1);
 	    echo sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image.'.$filetype."\n";
-	    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image.jpg', 'w');
+	    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image'.$filetype, 'w');
 	    curl_setopt($ch, CURLOPT_FILE, $fp);
 	    curl_exec ($ch);
 	    curl_close ($ch);
 	    fclose($fp);
-	    $i++;
 
+	    echo 'Imagick -> start'."\n";
+
+	    $picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image'.$filetype;
+
+	    $picture = new Imagick($picture_file);
+	    $width = $picture->getImageWidth();
+	    $height = $picture->getImageHeight();
+
+	    if ($width <= $height) {
+		$size = $width;
+	    }
+	    else {
+		$size = $height;
+	    }
+
+	    echo 'Imagick -> cropping'."\n";
+
+	    $picture->cropImage($size, $size, 0, 0);
+
+	    echo 'Imagick -> scaling'."\n";
+
+	    $picture->scaleImage(60,60);
+
+	    echo 'Imagick -> saving'."\n";
+
+	    $picture->writeImage($picture_file);
+	    $i++;
 	}
     }
   }
