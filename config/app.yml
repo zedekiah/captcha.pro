@@ -1,5 +1,5 @@
 all:
   images:
-    images_per_group:       50
-    images_width:           100
-    images_height:          100
+    images_per_word:				64
+    images_width:           60
+    images_height:					60
