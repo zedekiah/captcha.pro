@@ -35,10 +35,8 @@ EOF;
 
     // add your code here
 
-    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);
-    $images_qty = sfConfig::get('app_images_PerWord');
+    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);    
     $groups = Doctrine_Core::getTable('SynonymGroup')->createQuery()->execute();
-
 
     foreach ($groups as $group) {
 
@@ -53,7 +51,10 @@ EOF;
 	    /* START: For each word in word group */
 
 	    $word = Doctrine_Core::getTable('Word')->findOneById($g_word->getWordId());
-	    echo $word."\n";	    
+	    echo $word."\n";
+
+	    $images_qty = sfConfig::get('app_images_perWord');
+	    $images_cursor = 0;
 
 	    while ($images_qty != 0) {
 
@@ -61,20 +62,20 @@ EOF;
 
 		if ($images_qty > 7) {
 		    $images_per_page = 8;
-		    $images_qty = $images_qty - 8;
+		    $images_qty = $images_qty - 8;		    
 		} else {
 		    $images_per_page = $images_qty;
 		    $images_qty = 0;
 		}
 
-		if (sfConfig::get('app_images_Filetype') == 'all') {
+		if (sfConfig::get('app_images_filetype') == 'all') {
 		    $filetype = '';
 		} else {
-		    $filetype = 'as_filetype='.sfConfig::get('app_images_Filetype');
+		    $filetype = 'as_filetype='.sfConfig::get('app_images_filetype');
 		}
 
 		$search = $word;
-		$json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&'.$filetype.'&q='.urlencode($search).'&start=0');
+		$json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz='.$images_per_page.'&start='.$images_cursor.'&'.$filetype.'&q='.urlencode($search).'&start=0');
 		$data = json_decode($json);
 
 		foreach ($data->responseData->results as $v){
@@ -111,17 +112,20 @@ EOF;
 
 		    echo 'Imagick -> scaling'."\n";
 
-		    $picture->scaleImage(sfConfig::get('app_images_Width'), sfConfig::get('app_images_Height'));
+		    $picture->scaleImage(sfConfig::get('app_images_sidth'), sfConfig::get('app_images_height'));
 
 		    echo 'Imagick -> saving'."\n";
 
 		    $picture->writeImage($picture_file);
 		    $i++;
+		    /* END: For each word in word group */
 		}
 
-		/* END: For each word in word group */
-	    }
+		$images_cursor = $images_cursor + $images_per_page;
 
+		/* END: Pages */
+	    }
+	    
 	    /* END: For each group */
 
 	}

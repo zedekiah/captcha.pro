@@ -1,6 +1,6 @@
 all:
   images:
-    PerWord:				64
-    Width:           60
-    Height:					60
-    Filetype:					png
+    perWord:				3
+    width:           60
+    height:					60
+    filetype:					png
