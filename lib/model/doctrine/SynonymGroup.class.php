@@ -12,4 +12,14 @@
  */
 class SynonymGroup extends BaseSynonymGroup
 {
+    static public function resizeImage($outFile, $inFile, $newWidth, $newHeight, $quality)
+    {
+        $src=imagecreatefromjpeg($inFile);
+        $output=imagecreatetruecolor($newWidth, $newHeight);
+        imagecopyresampled($output, $src, 0, 0, 0, 0, $newWidth, $newHeight, imagesx($src), imagesy($src));
+
+        imagejpeg($output, $outFile, $quality);
+        imagedestroy($src);
+        imagedestroy($output);
+    }
 }
