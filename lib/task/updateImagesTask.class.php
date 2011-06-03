@@ -44,7 +44,7 @@ EOF;
 	$group_id = $group->getId();
 	
 	$g_words = Doctrine_Core::getTable('WordSynonymGroup')->findBySynonymGroupId($group_id);
-	$i = 0;
+	$i = 1;
 
 	foreach ($g_words as $g_word) {
 
@@ -84,40 +84,57 @@ EOF;
 		    $ch = curl_init();
 		    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
 		    $filetype = substr(strrchr($v->unescapedUrl,'.'),1);
-		    echo sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype."\n";
-		    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype, 'w');
+
+		    $file_path = sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype;
+
+		    echo $file_path."\n";
+		    $fp = fopen($file_path, 'w');
 		    curl_setopt($ch, CURLOPT_FILE, $fp);
 		    curl_exec ($ch);
 		    curl_close ($ch);
 		    fclose($fp);
 
-		    echo 'Imagick -> start'."\n";
+		    $mime = mime_content_type($file_path);
 
-		    $picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype;
+		    echo $mime."\n";
 
-		    $picture = new Imagick($picture_file);
-		    $width = $picture->getImageWidth();
-		    $height = $picture->getImageHeight();
+		    /* Filetype check */
 
-		    if ($width <= $height) {
-			$size = $width;
+		    $filetype_check = ($filetype == 'jpg') ? 'jpeg' : $filetype;
+		    
+		    if ('image/'.$filetype_check == $mime ) {					    
+		    
+			echo 'Imagick -> start'."\n";
+
+			$picture = new Imagick($file_path);
+			$width = $picture->getImageWidth();
+			$height = $picture->getImageHeight();
+
+			if ($width <= $height) {
+			    $size = $width;
+			}
+			else {
+			    $size = $height;
+			}
+
+			echo 'Imagick -> cropping'."\n";
+
+			$picture->cropImage($size, $size, 0, 0);
+
+			echo 'Imagick -> scaling'."\n";
+
+			$picture->scaleImage(sfConfig::get('app_images_width'), sfConfig::get('app_images_height'));
+
+			echo 'Imagick -> saving'."\n";
+
+			$picture->writeImage($file_path);
+			$i++;
+		    
+		    } else {
+			echo 'WRONG FILETYPE!'."\n";
+			$images_qty++;
 		    }
-		    else {
-			$size = $height;
-		    }
-
-		    echo 'Imagick -> cropping'."\n";
-
-		    $picture->cropImage($size, $size, 0, 0);
-
-		    echo 'Imagick -> scaling'."\n";
-
-		    $picture->scaleImage(sfConfig::get('app_images_sidth'), sfConfig::get('app_images_height'));
-
-		    echo 'Imagick -> saving'."\n";
-
-		    $picture->writeImage($picture_file);
-		    $i++;
+		    
 		    /* END: For each word in word group */
 		}
 
