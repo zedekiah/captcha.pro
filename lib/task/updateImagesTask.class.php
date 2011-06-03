@@ -34,7 +34,9 @@ EOF;
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
     // add your code here
-    
+
+    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);
+    $images_qty = sfConfig::get('app_images_PerWord');
     $groups = Doctrine_Core::getTable('SynonymGroup')->createQuery()->execute();
 
 
@@ -42,66 +44,87 @@ EOF;
 
 	/* START: For each group */
 	$group_id = $group->getId();
-	$words = Doctrine_Core::getTable('WordSynonymGroup')->findOneBySynonymGroupId($group_id);
+	
+	$g_words = Doctrine_Core::getTable('WordSynonymGroup')->findBySynonymGroupId($group_id);
 	$i = 0;
 
 	foreach ($g_words as $g_word) {
 
 	    /* START: For each word in word group */
 
-	    $word = Doctrine_Core::getTable('Word')->findOneById($g_word->getId());
-	    echo $word."\n";
+	    $word = Doctrine_Core::getTable('Word')->findOneById($g_word->getWordId());
+	    echo $word."\n";	    
 
-	    $search = $word;
-	    $json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&q='.urlencode($search).'&start=0');
-	    $data = json_decode($json);
+	    while ($images_qty != 0) {
 
-	    foreach ($data->responseData->results as $v){
+		/* START: Pages */
 
-		$data->responseData->cursor->estimatedResultCount;
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
-		$filetype = substr(strrchr($v->unescapedUrl,'.'),1);
-		echo sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype."\n";
-		$fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype, 'w');
-		curl_setopt($ch, CURLOPT_FILE, $fp);
-		curl_exec ($ch);
-		curl_close ($ch);
-		fclose($fp);
-
-		echo 'Imagick -> start'."\n";
-
-		$picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype;
-
-		$picture = new Imagick($picture_file);
-		$width = $picture->getImageWidth();
-		$height = $picture->getImageHeight();
-
-		if ($width <= $height) {
-		    $size = $width;
-		}
-		else {
-		    $size = $height;
+		if ($images_qty > 7) {
+		    $images_per_page = 8;
+		    $images_qty = $images_qty - 8;
+		} else {
+		    $images_per_page = $images_qty;
+		    $images_qty = 0;
 		}
 
-		echo 'Imagick -> cropping'."\n";
+		if (sfConfig::get('app_images_Filetype') == 'all') {
+		    $filetype = '';
+		} else {
+		    $filetype = 'as_filetype='.sfConfig::get('app_images_Filetype');
+		}
 
-		$picture->cropImage($size, $size, 0, 0);
+		$search = $word;
+		$json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&'.$filetype.'&q='.urlencode($search).'&start=0');
+		$data = json_decode($json);
 
-		echo 'Imagick -> scaling'."\n";
+		foreach ($data->responseData->results as $v){
 
-		$picture->scaleImage(sfConfig::get('app_captcha_image_width'), sfConfig::get('app_captcha_image_height'));
+		    $data->responseData->cursor->estimatedResultCount;
+		    $ch = curl_init();
+		    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
+		    $filetype = substr(strrchr($v->unescapedUrl,'.'),1);
+		    echo sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype."\n";
+		    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype, 'w');
+		    curl_setopt($ch, CURLOPT_FILE, $fp);
+		    curl_exec ($ch);
+		    curl_close ($ch);
+		    fclose($fp);
 
-		echo 'Imagick -> saving'."\n";
+		    echo 'Imagick -> start'."\n";
 
-		$picture->writeImage($picture_file);
-		$i++;
+		    $picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype;
+
+		    $picture = new Imagick($picture_file);
+		    $width = $picture->getImageWidth();
+		    $height = $picture->getImageHeight();
+
+		    if ($width <= $height) {
+			$size = $width;
+		    }
+		    else {
+			$size = $height;
+		    }
+
+		    echo 'Imagick -> cropping'."\n";
+
+		    $picture->cropImage($size, $size, 0, 0);
+
+		    echo 'Imagick -> scaling'."\n";
+
+		    $picture->scaleImage(sfConfig::get('app_images_Width'), sfConfig::get('app_images_Height'));
+
+		    echo 'Imagick -> saving'."\n";
+
+		    $picture->writeImage($picture_file);
+		    $i++;
+		}
+
+		/* END: For each word in word group */
 	    }
 
-	    /* END: For each word in word group */
-	}
+	    /* END: For each group */
 
-	/* END: For each group */
+	}
     }
   }
 }
