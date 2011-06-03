@@ -10,10 +10,20 @@
  */
 class captchaActions extends sfActions
 {
-    public function executeGetCaptcha()
+    public function executeGet()
     {
         //TODO взять 5 случайных картинок из группы и склеить их в одну
-        
+        $groupCount = SynonymGroupTable::getInstance()->count();
+        $randGroupNumber = rand(0, $groupCount);
+        $newImage = imagecreatetruecolor(sfConfig::get('app_captcha_image_width', 100)*3, sfConfig::get('app_captcha_image_height', 100)*3);
+        for($i = 0; $i < 3; $i++)
+        {
+            $src = imagecreatefrompng(sfConfig::get('sf_root_dir').'/web/images/cache/'.$randGroupNumber.'_'.rand(0, sfConfig::get('app_captcha_images_per_group', 50)).'.png');
+            imagecopy($newImage, $src, $i*sfConfig::get('app_captcha_image_width', 100), 0, 0, 0, imagesx($src), imagesy($src));
+            imagedestroy($src);
+        }
+        imagepng($newImage, sfConfig::get('sf_root_dir').'/web/images/captcha/1.png', 9);
+        $this->image = sfConfig::get('sf_root_dir').'/web/images/captcha/1.png';
     }
 
   public function executeIndex(sfWebRequest $request)

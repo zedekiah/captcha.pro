@@ -1,0 +1,5 @@
+all:
+  images:
+    images_per_group:       50
+    images_width:           100
+    images_height:          100

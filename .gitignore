@@ -2,3 +2,4 @@ log/*
 cache/*
 nbproject/
 web/images/cache/*
+web/images/captcha/*
