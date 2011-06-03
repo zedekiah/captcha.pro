@@ -54,7 +54,7 @@ EOF;
 	    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
 	    $filetype = substr(strrchr($v->unescapedUrl,'.'),1);
 	    echo sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image.'.$filetype."\n";
-	    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image'.$filetype, 'w');
+	    $fp = fopen(sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image.'.$filetype, 'w');
 	    curl_setopt($ch, CURLOPT_FILE, $fp);
 	    curl_exec ($ch);
 	    curl_close ($ch);
@@ -62,7 +62,7 @@ EOF;
 
 	    echo 'Imagick -> start'."\n";
 
-	    $picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image'.$filetype;
+	    $picture_file = sfConfig::get('sf_root_dir').'/web/images/cache/' . $i . '_image.'.$filetype;
 
 	    $picture = new Imagick($picture_file);
 	    $width = $picture->getImageWidth();
