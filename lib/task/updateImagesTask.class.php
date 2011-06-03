@@ -83,7 +83,7 @@ EOF;
 		    $data->responseData->cursor->estimatedResultCount;
 		    $ch = curl_init();
 		    curl_setopt($ch, CURLOPT_URL, $v->unescapedUrl);
-		    $filetype = substr(strrchr($v->unescapedUrl,'.'),1);
+		    $filetype = strtolower(substr(strrchr($v->unescapedUrl,'.'),1));
 
 		    $file_path = sfConfig::get('sf_root_dir').'/web/images/cache/' . $group_id. '_' .$i . '.'.$filetype;
 
