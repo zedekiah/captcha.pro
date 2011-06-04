@@ -12,6 +12,48 @@ class captchaActions extends sfActions
 {
     public function executeGetImage()
     {
+        $this->image = $this->generateCaptchaImage();
+    }
+
+    public function executeDemo()
+    {
+        $this->hash = $this->generateCaptchaImage();
+        $this->image = '/images/captcha/'.$this->hash.'.png';
+    }
+
+    public function executeValidation(sfWebRequest $request)
+    {
+        //TODO Валидация не доделана. нужно выяснять принадлежит ли введенное слово к группе и зкоторой сделана картинка
+        $hash = $_POST['captcha_hash'];
+        $word = strtolower($_POST['captcha_word']);
+        $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
+        $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
+        $this->forward404unless($validation);
+        if($wordObject)
+        {
+        $synonymGroup = Doctrine_Core::getTable('SynonymGroup')->findOneById($validation->getSynonymGroupId());
+        $this->result = Doctrine_Query::create()
+            ->select('word_id')
+            ->from('WordSynonymGroup')
+            ->where("synonym_group_id=$synonymGroup->id")
+            ->andWhere("word_id=$wordObject->id")
+            ->count();
+        }
+        else
+        {
+            $this->result = false;
+        }
+        $this->forward404Unless($this->result);
+    }
+
+    public function executeGetCaptcha()
+    {
+        $this->hash = $this->generateCaptchaImage();
+        $this->image = '/images/captcha/'.$this->hash.'.png';
+    }
+
+    public function generateCaptchaImage()
+    {
         $groupCount = SynonymGroupTable::getInstance()->count();
         $randGroupNumber = rand(1, $groupCount);
         $wordCount = Doctrine_Query::create()
@@ -34,31 +76,11 @@ class captchaActions extends sfActions
         }
         $hash = md5(date('dmYhis'));
         imagepng($newImage, sfConfig::get('sf_root_dir').'/web/images/captcha/'.$hash.'.png', 9);
-        $this->image = 'images/captcha/'.$hash.'.png';
         $validation = new Validation();
         $validation->setHash($hash);
         $validation->setSynonymGroupId($randGroupNumber);
         $validation->save();
-        $this->val = $wordCount;
-    }
-
-    public function executeGetCaptcha()
-    {
-        //TODO Сделать форму, ее пока нет
-        $this->form = new CaptchaForm();
-    }
-
-    public function executeValidation(sfWebRequest $request)
-    {
-        //TODO Валидация не доделана. нужно выяснять принадлежит ли введенное слово к группе и зкоторой сделана картинка
-        $hash = $request->getparameter('hash');
-        $word = $request->getParameter('word');
-        $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
-        if($validation) 
-        {
-            $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
-            die($wordObject->getSynonymGroupId());
-        }
+        return $hash;
     }
 
   public function executeIndex(sfWebRequest $request)
