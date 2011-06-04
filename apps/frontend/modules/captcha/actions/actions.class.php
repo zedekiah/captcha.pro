@@ -16,7 +16,7 @@ class captchaActions extends sfActions
 	$this->setLayout(false);
     }
 
-    public function executeDemo()
+    public function executeDemo(sfWebRequest $request)
     {
         $this->form = new DemoForm();
         if( $request->isMethod('post'))
