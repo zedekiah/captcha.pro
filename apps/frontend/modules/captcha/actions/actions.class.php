@@ -13,12 +13,14 @@ class captchaActions extends sfActions
     public function executeGetImage()
     {
         $this->image = $this->generateCaptchaImage();
+	$this->setLayout(false);
     }
 
     public function executeDemo()
     {
         $this->hash = $this->generateCaptchaImage();
         $this->image = '/images/captcha/'.$this->hash.'.png';
+	$this->getResponse()->addStylesheet('procaptcha-default');
     }
 
     public function executeValidation(sfWebRequest $request)
@@ -50,6 +52,7 @@ class captchaActions extends sfActions
     {
         $this->hash = $this->generateCaptchaImage();
         $this->image = '/images/captcha/'.$this->hash.'.png';
+	$this->setLayout(false);
     }
 
     public function generateCaptchaImage()

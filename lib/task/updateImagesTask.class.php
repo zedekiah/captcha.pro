@@ -27,6 +27,32 @@ Call it with:
 EOF;
   }
 
+  public function scaleImage($file_path) {
+    echo 'Imagick -> start'."\n";
+
+    $picture = new Imagick($file_path);
+    $width = $picture->getImageWidth();
+    $height = $picture->getImageHeight();
+    $size = ($width <= $height) ? $width : $height;
+
+    echo 'Imagick -> cropping'."\n";
+
+    $picture->cropImage($size, $size, 0, 0);
+
+    echo 'Imagick -> scaling'."\n";
+
+    $picture->scaleImage(sfConfig::get('app_images_width'), sfConfig::get('app_images_height'));
+
+    echo 'Imagick -> saving'."\n";
+
+    $picture->writeImage($file_path);
+  }
+
+  public function getImagesJson($images_per_page, $images_cursor, $filetype, $search) {
+    $json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&safe=off&rsz='.$images_per_page.'&start='.$images_cursor.'&'.$filetype.'&q='.urlencode($search));
+    return json_decode($json);
+  }
+
   protected function execute($arguments = array(), $options = array())
   {
     // initialize the database connection
@@ -74,9 +100,7 @@ EOF;
 		    $filetype = 'as_filetype='.sfConfig::get('app_images_filetype');
 		}
 
-		$search = $word;
-		$json = file_get_contents('http://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz='.$images_per_page.'&start='.$images_cursor.'&'.$filetype.'&q='.urlencode($search).'&start=0');
-		$data = json_decode($json);
+		$data = $this->getImagesJson($images_per_page, $images_cursor, $filetype, $word);
 
 		foreach ($data->responseData->results as $v){
 
@@ -103,33 +127,8 @@ EOF;
 		    $filetype_check = ($filetype == 'jpg') ? 'jpeg' : $filetype;
 		    
 		    if ('image/'.$filetype_check == $mime ) {					    
-		    
-			echo 'Imagick -> start'."\n";
-
-			$picture = new Imagick($file_path);
-			$width = $picture->getImageWidth();
-			$height = $picture->getImageHeight();
-
-			if ($width <= $height) {
-			    $size = $width;
-			}
-			else {
-			    $size = $height;
-			}
-
-			echo 'Imagick -> cropping'."\n";
-
-			$picture->cropImage($size, $size, 0, 0);
-
-			echo 'Imagick -> scaling'."\n";
-
-			$picture->scaleImage(sfConfig::get('app_images_width'), sfConfig::get('app_images_height'));
-
-			echo 'Imagick -> saving'."\n";
-
-			$picture->writeImage($file_path);
-			$i++;
-		    
+			$this->scaleImage($file_path);
+			$i++;		    
 		    } else {
 			echo 'WRONG FILETYPE!'."\n";
 			$images_qty++;
@@ -144,7 +143,6 @@ EOF;
 	    }
 	    
 	    /* END: For each group */
-
 	}
     }
   }
