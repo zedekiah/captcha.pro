@@ -9,6 +9,14 @@
     <?php include_javascripts() ?>
   </head>
   <body>
-    <?php echo $sf_content ?>
+    <div id="wrapper">
+	<div class="standart header">
+	    <h1><a href="<?php echo url_for('@homepage') ?>">PROCaptcha</a><sup>beta</sup></h1>
+	    <span>Picture Recognition Oriented Captcha</span>
+	</div>
+	<div class="content">
+	    <?php echo $sf_content ?>
+	</div>
+    </div>
   </body>
 </html>

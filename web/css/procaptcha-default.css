@@ -1,0 +1,29 @@
+.procaptcha {
+    width: 380px;
+    border: 1px solid #b9b9b9;
+    color: #b9b9b9;
+}
+
+.procaptcha img {
+    -moz-box-shadow: 0 0 5px #888;
+    -webkit-box-shadow: 0 0 5px #888;
+    box-shadow: 0 0 5px #888;
+}
+
+.procaptcha .refresh {
+    display: block;
+    background: url('/images/refresh.png') no-repeat;
+    height: 60px;
+    width: 60px;
+}
+
+.procaptcha span {
+    display: block;
+    font-size: 10px;
+}
+
+.procaptcha input {
+    width: 100%;
+    border: 1px solid #b9b9b9;
+    color: #999;
+}

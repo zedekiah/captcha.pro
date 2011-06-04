@@ -1,7 +1,5 @@
 <?php
 
-include(sfConfig::get('sf_root_dir').'/web/verification.php');
-
 /**
  * captcha actions.
  *
@@ -12,12 +10,13 @@ include(sfConfig::get('sf_root_dir').'/web/verification.php');
  */
 class captchaActions extends sfActions
 {
-    public function executeGetNewImage()
+    public function executeGetImage()
     {
-        $this->image = Captcha::generateImage();
+        $this->image = $this->generateCaptchaImage();
+	$this->setLayout(false);
     }
 
-    public function executeDemo(sfWebRequest $request)
+    public function executeDemo()
     {
         $this->form = new DemoForm();
         if( $request->isMethod('post'))
@@ -32,11 +31,12 @@ class captchaActions extends sfActions
                 return 'Complete';
             }
         }
+	    $this->getResponse()->addStylesheet('procaptcha-default');
     }
 
     public function executeValidation(sfWebRequest $request)
     {
-        $hash = $request->getParameter('hash');//$_POST['captcha_hash'];
+        $hash = $request->getParameter('hash');
         $word = $request->getParameter('word');
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
         $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
@@ -60,6 +60,40 @@ class captchaActions extends sfActions
 
     public function executeGetCaptcha()
     {
+        $this->hash = $this->generateCaptchaImage();
+        $this->image = '/images/captcha/'.$this->hash.'.png';
+	$this->setLayout(false);
+    }
+
+    public function generateCaptchaImage()
+    {
+        $groupCount = SynonymGroupTable::getInstance()->count();
+        $randGroupNumber = rand(1, $groupCount);
+        $wordCount = Doctrine_Query::create()
+            ->select('word_id')
+            ->from('WordSynonymGroup')
+            ->where("synonym_group_id=$randGroupNumber")
+            ->count();
+        $newImage = imagecreatetruecolor(sfConfig::get('app_images_width')*5, sfConfig::get('app_images_height'));
+        $alreadyUsed = array();
+        for($i = 0; $i < 5; $i++)
+        {
+            $randImageNumber = rand(1, sfConfig::get('app_images_perWord')*$wordCount);
+            while(in_array($randImageNumber, $alreadyUsed)) {
+                $randImageNumber = rand(1, sfConfig::get('app_images_perWord')*$wordCount);
+            }
+            $src = imagecreatefrompng(sfConfig::get('sf_root_dir').'/web/images/cache/'.$randGroupNumber.'_'.$randImageNumber.'.'.sfConfig::get('app_images_filetype'));
+            imagecopy($newImage, $src, $i*sfConfig::get('app_images_width'), 0, 0, 0, imagesx($src), imagesy($src));
+            imagedestroy($src);
+            $alreadyUsed[] = $randImageNumber;
+        }
+        $hash = md5(date('dmYhis'));
+        imagepng($newImage, sfConfig::get('sf_root_dir').'/web/images/captcha/'.$hash.'.png', 9);
+        $validation = new Validation();
+        $validation->setHash($hash);
+        $validation->setSynonymGroupId($randGroupNumber);
+        $validation->save();
+        return $hash;
     }
 
   public function executeIndex(sfWebRequest $request)
