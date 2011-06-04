@@ -1,9 +1,11 @@
 window.onload = function(){
-	sendAnswer("procaptcha/captcha/getCaptcha");
+//$(document).ready(function() {
+	sendAnswer("http://procaptcha/captcha/getCaptcha");
 }
+
 function sendAnswer(url){
 		$.ajax({
-	type: "POST",
+	type: "GET",
 	url: url,
     success: function(data){
 		$("#procaptcha_container").html(data);

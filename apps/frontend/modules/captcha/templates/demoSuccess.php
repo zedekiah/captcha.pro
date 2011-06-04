@@ -1,7 +1,5 @@
-<form action="<?php echo url_for('captcha/validation', true); ?>" method="post">
-    <img src="<?php echo $image ?>">
-    <p><input name="captcha_hash" type="text" value="<?php echo $hash ?>" readonly></p>
-    <p>Word</p>
-    <input name="captcha_word" type="text">
+<form action="<?php echo $sf_request->getUri(); ?>" method="post">
+    <?php echo $form ?>
+    <div id="procaptcha_container"></div>
     <p><input type="submit"></p>
 </form>

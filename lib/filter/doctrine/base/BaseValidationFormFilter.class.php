@@ -37,6 +37,7 @@ abstract class BaseValidationFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
+      'id'               => 'Number',
       'hash'             => 'Text',
       'synonym_group_id' => 'ForeignKey',
     );
