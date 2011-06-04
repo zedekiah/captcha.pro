@@ -1,6 +1,11 @@
-.procaptcha {
-    width: 380px;
+#procaptcha_container {
+    width: 360px;
+    padding: 10px;
     border: 1px solid #b9b9b9;
+}
+
+.procaptcha {
+    width: 360px;
     color: #b9b9b9;
 }
 
@@ -17,14 +22,27 @@
     width: 60px;
 }
 
-.procaptcha span {
+.procaptcha label {
     display: block;
     font-size: 10px;
     color: #999;
+    font-family: Arial;
+    padding: 3px 0;
 }
 
 .procaptcha input {
     width: 100%;
     border: 1px solid #b9b9b9;
     color: #999;
+    height: 25px;
+    font-size: 12pt;
+}
+
+.procaptcha span {
+    display: block;
+    font-size: 10px;
+    color: #999;
+    font-family: Arial;
+    text-align: right;
+    padding: 3px 0 0 0;
 }

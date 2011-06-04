@@ -18,7 +18,7 @@
 		— OpenSource! Исходный код доступен на <a href="https://github.com/lzedl/captcha.pro">GitHub</a>.
 	    </p>
 	    <p>
-		— Демо? <a href="<?php echo url_for('captcha/Demo') ?>">Демо</a>!
+		— Демо? <a href="<?php echo url_for('captcha/demo') ?>">Демо</a>!
 	    </p>
 	</td>
     </tr>
