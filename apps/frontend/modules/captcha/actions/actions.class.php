@@ -52,7 +52,7 @@ class captchaActions extends sfActions
     {
         $this->hash = $this->generateCaptchaImage();
         $this->image = '/images/captcha/'.$this->hash.'.png';
-	$this->setLayout(false);
+	$this->setLayout(false);	
     }
 
     public function generateCaptchaImage()

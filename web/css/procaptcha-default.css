@@ -20,6 +20,7 @@
 .procaptcha span {
     display: block;
     font-size: 10px;
+    color: #999;
 }
 
 .procaptcha input {
