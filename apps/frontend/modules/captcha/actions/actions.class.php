@@ -18,6 +18,7 @@ class captchaActions extends sfActions
 
     public function executeDemo(sfWebRequest $request)
     {
+        $this->captchaError = false;
         $this->form = new DemoForm();
         if( $request->isMethod('post'))
         {
