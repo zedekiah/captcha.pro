@@ -75,13 +75,22 @@ body {
     color: #666;
 }
 
-.about .info p a {
+.about .info p a, .link {
     color: #fff;
     background: #666;
     text-decoration: none;
     padding: 3px;
 }
 
-.about .info p a:hover {
+.about .info p a:hover, .link:hover {
     background: #333;
+}
+
+.form label {
+   color: #666;
+   display: block;
+}
+
+#procaptcha_container {
+    margin: 10px 0;
 }

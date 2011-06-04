@@ -1,4 +1,4 @@
-<div class="standart">
+<div class="standart form">
     <form action="<?php echo $sf_request->getUri(); ?>" method="post">
 	<?php echo $form ?>
 	<div id="procaptcha_container"></div>
