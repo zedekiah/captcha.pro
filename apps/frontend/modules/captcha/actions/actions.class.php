@@ -26,7 +26,8 @@ class captchaActions extends sfActions
             $word = $request->getParameter('captcha_word');
             $params = $request->getParameter('demo_form');
             $this->form->bind($params);
-            if($this->form->isValid() and procaptcha_verify($hash, $word))
+            $this->captchaError = !procaptcha_verify($hash, $word);
+            if($this->form->isValid() and !$this->captchaError)
             {
                 return 'Complete';
             }
@@ -35,8 +36,8 @@ class captchaActions extends sfActions
 
     public function executeValidation(sfWebRequest $request)
     {
-        $hash = $_POST['captcha_hash'];
-        $word = strtolower($_POST['captcha_word']);
+        $hash = $request->getParameter('hash');//$_POST['captcha_hash'];
+        $word = $request->getParameter('word');
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
         $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
         $this->forward404unless($validation);
