@@ -10,7 +10,7 @@
 <tr>
     <td colspan="2">
 	<input name="captcha_hash" type="text" value="<?php echo $hash ?>" readonly style="display: none;" />
-	<label>Опишите одним словом то, что видите на этих картинках:</label>
+	<label>Опишите одним словом то, что вы видите на этих картинках:</label>
 	<input name="captcha_word" type="text" />
 	<span>PROCaptcha 2011</span>
     </td>

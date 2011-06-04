@@ -87,10 +87,24 @@ body {
 }
 
 .form label {
-   color: #666;
+   color: #999;
    display: block;
 }
 
 #procaptcha_container {
-    margin: 10px 0;
+    margin: 10px 0 5px 0;
+}
+
+.error_list {
+   list-style-type: none;
+   padding: 0;
+   margin: 0;
+}
+
+.error_list li {
+   color: red;
+   font-style: italic;
+   font-size: 10px;
+   margin: 5px;
+   padding: 0;
 }
