@@ -18,16 +18,26 @@ class captchaActions extends sfActions
 
     public function executeDemo()
     {
-        $this->hash = $this->generateCaptchaImage();
-        $this->image = '/images/captcha/'.$this->hash.'.png';
-	$this->getResponse()->addStylesheet('procaptcha-default');
+        $this->form = new DemoForm();
+        if( $request->isMethod('post'))
+        {
+            $hash = $request->getParameter('captcha_hash');
+            $word = $request->getParameter('captcha_word');
+            $params = $request->getParameter('demo_form');
+            $this->form->bind($params);
+            $this->captchaError = !procaptcha_verify($hash, $word);
+            if($this->form->isValid() and !$this->captchaError)
+            {
+                return 'Complete';
+            }
+        }
+	    $this->getResponse()->addStylesheet('procaptcha-default');
     }
 
     public function executeValidation(sfWebRequest $request)
     {
-        //TODO Валидация не доделана. нужно выяснять принадлежит ли введенное слово к группе и зкоторой сделана картинка
-        $hash = $_POST['captcha_hash'];
-        $word = strtolower($_POST['captcha_word']);
+        $hash = $request->getParameter('hash');
+        $word = $request->getParameter('word');
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
         $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
         $this->forward404unless($validation);
