@@ -32,6 +32,6 @@ EOF;
     // initialize the database connection
     $databaseManager = new sfDatabaseManager($this->configuration);
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
-
+    Doctrine::getTable('Validation')->findAll()->delete();
   }
 }
