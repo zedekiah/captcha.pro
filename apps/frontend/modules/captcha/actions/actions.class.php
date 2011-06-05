@@ -91,12 +91,12 @@ class captchaActions extends sfActions
             imagedestroy($src);
             $alreadyUsed[] = $randImageNumber;
         }
-        $hash = md5(date('dmYhis'));
+        $hash = md5(mt_rand().$randGroupNumber);
         imagepng($newImage, sfConfig::get('sf_root_dir').'/web/images/captcha/'.$hash.'.png', 9);
         $validation = new Validation();
         $validation->setHash($hash);
         $validation->setSynonymGroupId($randGroupNumber);
-        $validation->save();
+        //$validation->save();
         return $hash;
     }
 
