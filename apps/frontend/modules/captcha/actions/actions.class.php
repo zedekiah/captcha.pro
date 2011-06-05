@@ -60,7 +60,7 @@ class captchaActions extends sfActions
             $this->result = false;
         }
         $this->forward404Unless($this->result);
-        Doctrine_Core::getTable('Validation')->removeRecord($validation);
+	Doctrine::getTable('Validation')->findBy('hash', $hash)->delete();
     }
 
     public function executeGetCaptcha()
