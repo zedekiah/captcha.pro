@@ -8,4 +8,9 @@ class pageActions extends sfActions
 
   }
 
+  public function executeApi(sfWebRequest $request)
+  {
+
+  }
+
 }

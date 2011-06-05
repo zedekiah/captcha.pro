@@ -108,3 +108,7 @@ body {
    margin: 5px;
    padding: 0;
 }
+
+.api h2 {
+   margin: 5px 0;
+}
