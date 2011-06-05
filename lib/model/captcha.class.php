@@ -15,7 +15,11 @@ class Captcha
             ->from('WordSynonymGroup')
             ->where("synonym_group_id=$randGroupNumber")
             ->count();
+	
         $newImage = imagecreatetruecolor(sfConfig::get('app_images_width')*5, sfConfig::get('app_images_height'));
+	$background = imagecolorallocate($newImage, 255, 255, 255);
+	imagefill($newImage, 0, 0, $background);
+	
         $alreadyUsed = array();
         for($i = 0; $i < 5; $i++)
         {
