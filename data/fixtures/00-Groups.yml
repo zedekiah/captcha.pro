@@ -3,11 +3,15 @@ SynonymGroup:
     description:	"Представители семейства кошачьих"
   Head:
     description:	"Голова"
-  Jar:
-    description:	"Банка"
+#  Jar:
+#    description:	"Банка"
   Tits:
     description:	"Сиськи, дойки и т.д."
   Hammer:
     description:	"Молоток"
   Putin:
     description:	"Путин"
+  Screw_drivers:
+    description:    "Отвертка - она и есть отвертка"
+  Guitars:
+    description:    "Гитары"

@@ -8,9 +8,9 @@ Word:
   w3:
     name:	"голова"
     Groups:	[Head]
-  w4:
-    name:	"банка"
-    Groups:	[Jar]
+#  w4:
+#    name:	"банка"
+#    Groups:	[Jar]
   w5:
     name:	"сиськи"
     Groups:	[Tits]
@@ -20,3 +20,9 @@ Word:
   w7:
     name:	"путин"
     Groups:	[Putin]
+  w7:
+    name:   "отвертка"
+    Groups: [Screw_drivers]
+  w8:
+    name:   "гитара"
+    Groups: [Guitars]
