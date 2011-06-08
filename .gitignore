@@ -1,5 +1,5 @@
-log/*
-cache/*
+log/
+cache/
 nbproject/
-web/images/cache/*
-web/images/captcha/*
+web/images/cache/
+web/images/captcha/
