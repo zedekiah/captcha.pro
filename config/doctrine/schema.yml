@@ -37,3 +37,28 @@ Validation:
       foreign:  id
       onDelete: CASCADE
       onUpdate: CASCADE
+
+FailWord:
+  columns:
+    id:                 { type: integer(4), primary: true, autoincrement: true, unsigned: true }
+    synonym_group_id:   { type: integer, notnull: true, primary: true }
+    new_word:           { type: string(255), notnull: true, primary: true }
+    count:              { type: integer, notnull: true, primary: false }
+  relations:
+    SynonymGroup:
+      local:    synonym_group_id
+      foreign:  id
+      onDelete: CASCADE
+      onUpdate: CASCADE
+
+PossibleWord:
+  columns:
+    id:                 { type: integer(4), primary: true, autoincrement: true, unsigned: true }
+    synonym_group_id:   { type: integer, notnull: true, primary: false }
+    new_word:           { type: string(255), notnull: true, primary: true }
+  relations:
+    SynonymGroup:
+      local:    synonym_group_id
+      foreign:  id
+      onDelete: CASCADE
+      onUpdate: CASCADE

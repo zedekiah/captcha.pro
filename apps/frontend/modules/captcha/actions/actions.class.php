@@ -43,8 +43,8 @@ class captchaActions extends sfActions
         $hash = $request->getParameter('hash');
         $word = $request->getParameter('word');
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
-        $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word);
-        $this->forward404unless($validation);
+        $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word); 
+        $this->forward404Unless($validation);
         if($wordObject)
         {
         $synonymGroup = Doctrine_Core::getTable('SynonymGroup')->findOneById($validation->getSynonymGroupId());
@@ -59,13 +59,37 @@ class captchaActions extends sfActions
         {
             $this->result = false;
         }
+        if(!$this->result)
+        {
+            $failExist = Doctrine_Query::create()
+                        ->select('id')
+                        ->from('FailWord')
+                        ->where("synonym_group_id=$synonymGroup->id")
+                        ->andWhere("word=$word")
+                        ->count();
+            if($failExist)
+            {
+                $failWord = Doctrine_Core::getTable('FailWord')->findOneByWordAndSynonymGroupId(array($word, $synonymGroup->id));
+                $failWord->setCount($failWord->getCount()+1);
+                $failWord->save();
+            }
+            else
+            {
+                $failWord = new failWord();
+                $failWord->setSynonymGroupId($synonymGroup->getId());
+                $failWord->setWord($word);
+                $failWord->setCount(1);
+                $failWord->save();
+            }
+            $this->forward404();
+        }
         $this->forward404Unless($this->result);
-	Doctrine::getTable('Validation')->findBy('hash', '*')->delete();
+        Doctrine::getTable('Validation')->findBy('hash', $hash)->delete();
     }
 
     public function executeGetCaptcha()
     {
-	$this->setLayout(false);	
+        $this->setLayout(false);
     }
 
   public function executeIndex(sfWebRequest $request)
