@@ -4,3 +4,6 @@ all:
     width:           60
     height:					60
     filetype:					png
+  suspicious:
+    percentageingroups:				5
+    percentagepergroup:				5

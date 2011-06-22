@@ -1,7 +1,7 @@
 CREATE TABLE fail_word (id INT UNSIGNED AUTO_INCREMENT, synonym_group_id BIGINT NOT NULL, new_word VARCHAR(255), count BIGINT NOT NULL, INDEX synonym_group_id_idx (synonym_group_id), PRIMARY KEY(id, new_word)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 CREATE TABLE possible_word (id INT UNSIGNED AUTO_INCREMENT, synonym_group_id BIGINT NOT NULL, new_word VARCHAR(255), INDEX synonym_group_id_idx (synonym_group_id), PRIMARY KEY(id, new_word)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 CREATE TABLE synonym_group (id BIGINT AUTO_INCREMENT, description VARCHAR(255), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
-CREATE TABLE validation (id INT UNSIGNED AUTO_INCREMENT, hash VARCHAR(255), synonym_group_id BIGINT NOT NULL, INDEX synonym_group_id_idx (synonym_group_id), PRIMARY KEY(id, hash)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
+CREATE TABLE validation (id INT UNSIGNED AUTO_INCREMENT, hash VARCHAR(255), synonym_group_id BIGINT NOT NULL, created_at DATETIME, INDEX synonym_group_id_idx (synonym_group_id), PRIMARY KEY(id, hash)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 CREATE TABLE word (id BIGINT AUTO_INCREMENT, name VARCHAR(255) NOT NULL UNIQUE, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 CREATE TABLE word_synonym_group (word_id BIGINT, synonym_group_id BIGINT, PRIMARY KEY(word_id, synonym_group_id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ENGINE = INNODB;
 ALTER TABLE fail_word ADD CONSTRAINT fail_word_synonym_group_id_synonym_group_id FOREIGN KEY (synonym_group_id) REFERENCES synonym_group(id) ON UPDATE CASCADE ON DELETE CASCADE;

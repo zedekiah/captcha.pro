@@ -59,6 +59,7 @@ class captchaActions extends sfActions
         {
             $this->result = false;
         }
+
         if(!$this->result)
         {
             $failExist = Doctrine_Query::create()

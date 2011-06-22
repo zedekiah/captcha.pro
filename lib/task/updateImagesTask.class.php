@@ -16,6 +16,8 @@ class updateImagesTask extends sfBaseTask
       // add your own options here
     ));
 
+    $this->addOption('group', null, sfCommandOption::PARAMETER_OPTIONAL, 'Update group');
+
     $this->namespace        = 'captcha';
     $this->name             = 'updateImages';
     $this->briefDescription = '';
@@ -61,8 +63,13 @@ EOF;
 
     // add your code here
 
-    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);    
-    $groups = Doctrine_Core::getTable('SynonymGroup')->createQuery()->execute();
+    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);
+    
+    if (isset($options['group'])) {
+	$groups = Doctrine_Core::getTable('SynonymGroup')->findById($options['group']);
+    } else {
+	$groups = Doctrine_Core::getTable('SynonymGroup')->createQuery()->execute();
+    }
 
     foreach ($groups as $group) {
 

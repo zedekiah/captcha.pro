@@ -6,11 +6,11 @@ Word:
     name:	"кот"
     Groups:	[Cats]
   w3:
-    name:	"голова"
-    Groups:	[Head]
-#  w4:
-#    name:	"банка"
-#    Groups:	[Jar]
+    name:	"нога"
+    Groups:	[Leg]
+  w4:
+    name:	"банк"
+    Groups:	[Bank]
   w5:
     name:	"сиськи"
     Groups:	[Tits]
@@ -18,11 +18,14 @@ Word:
     name:	"молоток"
     Groups:	[Hammer]
   w7:
-    name:	"путин"
-    Groups:	[Putin]
-  w7:
-    name:   "отвертка"
-    Groups: [Screw_drivers]
+    name:	"ножка"
+    Groups:	[Leg]
   w8:
-    name:   "гитара"
-    Groups: [Guitars]
+    name:	"цветок"
+    Groups:	[Flower]
+  w9:
+    name:	"автомобиль"
+    Groups:	[Car]
+  w10:
+    name:	"авто"
+    Groups:	[Car]

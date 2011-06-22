@@ -8,15 +8,18 @@
  * @property integer $id
  * @property string $hash
  * @property integer $synonym_group_id
+ * @property timestamp $created_at
  * @property SynonymGroup $SynonymGroup
  * 
  * @method integer      getId()               Returns the current record's "id" value
  * @method string       getHash()             Returns the current record's "hash" value
  * @method integer      getSynonymGroupId()   Returns the current record's "synonym_group_id" value
+ * @method timestamp    getCreatedAt()        Returns the current record's "created_at" value
  * @method SynonymGroup getSynonymGroup()     Returns the current record's "SynonymGroup" value
  * @method Validation   setId()               Sets the current record's "id" value
  * @method Validation   setHash()             Sets the current record's "hash" value
  * @method Validation   setSynonymGroupId()   Sets the current record's "synonym_group_id" value
+ * @method Validation   setCreatedAt()        Sets the current record's "created_at" value
  * @method Validation   setSynonymGroup()     Sets the current record's "SynonymGroup" value
  * 
  * @package    captcha
@@ -45,6 +48,9 @@ abstract class BaseValidation extends sfDoctrineRecord
              'type' => 'integer',
              'notnull' => true,
              'primary' => false,
+             ));
+        $this->hasColumn('created_at', 'timestamp', null, array(
+             'type' => 'timestamp',
              ));
     }
 
