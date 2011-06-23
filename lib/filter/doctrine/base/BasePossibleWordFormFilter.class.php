@@ -13,11 +13,13 @@ abstract class BasePossibleWordFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'synonym_group_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SynonymGroup'), 'add_empty' => true)),
+      'new_word'    => new sfWidgetFormFilterInput(array('with_empty' => false)),
+      'groups_list' => new sfWidgetFormDoctrineChoice(array('multiple' => true, 'model' => 'SynonymGroup')),
     ));
 
     $this->setValidators(array(
-      'synonym_group_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SynonymGroup'), 'column' => 'id')),
+      'new_word'    => new sfValidatorPass(array('required' => false)),
+      'groups_list' => new sfValidatorDoctrineChoice(array('multiple' => true, 'model' => 'SynonymGroup', 'required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('possible_word_filters[%s]');
@@ -29,6 +31,24 @@ abstract class BasePossibleWordFormFilter extends BaseFormFilterDoctrine
     parent::setup();
   }
 
+  public function addGroupsListColumnQuery(Doctrine_Query $query, $field, $values)
+  {
+    if (!is_array($values))
+    {
+      $values = array($values);
+    }
+
+    if (!count($values))
+    {
+      return;
+    }
+
+    $query
+      ->leftJoin($query->getRootAlias().'.PossibleWordSynonymGroup PossibleWordSynonymGroup')
+      ->andWhereIn('PossibleWordSynonymGroup.synonym_group_id', $values)
+    ;
+  }
+
   public function getModelName()
   {
     return 'PossibleWord';
@@ -37,9 +57,9 @@ abstract class BasePossibleWordFormFilter extends BaseFormFilterDoctrine
   public function getFields()
   {
     return array(
-      'id'               => 'Number',
-      'synonym_group_id' => 'ForeignKey',
-      'new_word'         => 'Text',
+      'id'          => 'Number',
+      'new_word'    => 'Text',
+      'groups_list' => 'ManyKey',
     );
   }
 }

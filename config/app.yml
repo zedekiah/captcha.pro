@@ -5,5 +5,11 @@ all:
     height:					60
     filetype:					png
   suspicious:
-    percentageingroups:				5
-    percentagepergroup:				5
+    percentageingroups:				1
+    percentagepergroup:				1
+  trusted:
+    percentage:				10
+    min:				1000
+  possible:
+    percentage:				50
+    min:				10

@@ -33,10 +33,27 @@ EOF;
     $databaseManager = new sfDatabaseManager($this->configuration);
     $connection = $databaseManager->getDatabase($options['connection'])->getConnection();
 
+    $configuration = ProjectConfiguration::getApplicationConfiguration('frontend', 'prod', true);
+
     $groups_qty = Doctrine_Core::getTable('SynonymGroup')->count();
+    $words = Doctrine_Query::create()->select('new_word')->from('FailWord')->setHydrationMode(Doctrine_Core::HYDRATE_ARRAY)->execute();
 
-    $words = Doctrine_Core::getTable('FailWord')->findAll();
+    foreach ($words as $word) {
+	
+	$word = $word['new_word'];
+	echo 'Word: '.$word_in_groups."\n";
 
-    Doctrine::getTable('Validation')->findAll()->delete();
+	$word_in_groups = Doctrine_Query::create()->select('count(0)')->from('FailWord a')->where('count>'.($groups_qty*sfConfig::get('app_suspicious_percentagepergroup')/100))->andWhere('new_word', $word)->setHydrationMode(Doctrine_Core::HYDRATE_SINGLE_SCALAR)->execute();
+	$word_in_groups = count($word_in_groups);
+
+	echo 'Word in groups: '.$word_in_groups."\n";
+	echo 'Groups qty:'.$groups_qty."\n";
+	echo 'Suspicious: '.($groups_qty*sfConfig::get('app_suspicious_percentageingroups')/100)."\n";
+	if ($word_in_groups > ($groups_qty*sfConfig::get('app_suspicious_percentageingroups')/100)) {
+	    echo 'DELETE!'."\n";
+	    Doctrine_Core::getTable('FailWord')->findBy('new_word', $word)->delete();
+	}
+    }
+    echo "\n\n";
   }
 }

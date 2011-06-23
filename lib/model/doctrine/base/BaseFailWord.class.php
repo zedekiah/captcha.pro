@@ -41,8 +41,7 @@ abstract class BaseFailWord extends sfDoctrineRecord
              ));
         $this->hasColumn('synonym_group_id', 'integer', null, array(
              'type' => 'integer',
-             'notnull' => true,
-             'primary' => false,
+             'primary' => true,
              ));
         $this->hasColumn('new_word', 'string', 255, array(
              'type' => 'string',

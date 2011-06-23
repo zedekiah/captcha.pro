@@ -26,6 +26,22 @@ WordSynonymGroup:
       onDelete:	CASCADE
       onUpdate:	CASCADE
 
+PossibleWordSynonymGroup:
+  columns:
+    word_id:		{ type: integer, notnull: true, primary: true }
+    synonym_group_id:	{ type: integer, notnull: true, primary: true }
+  relations:
+    PossibleWord:
+      local:	word_id
+      foreign:	id
+      onDelete:	CASCADE
+      onUpdate:	CASCADE
+    SynonymGroup:
+      local:	synonym_group_id
+      foreign:	id
+      onDelete:	CASCADE
+      onUpdate:	CASCADE
+
 Validation:
   columns:
     id:                 { type: integer(4), primary: true, autoincrement: true, unsigned: true }
@@ -53,13 +69,13 @@ FailWord:
       onUpdate: CASCADE
 
 PossibleWord:
-  columns:
-    id:                 { type: integer(4), primary: true, autoincrement: true, unsigned: true }
-    synonym_group_id:   { type: integer, notnull: true, primary: false }
-    new_word:           { type: string(255), notnull: true, primary: true }
+  columns:   
+    new_word:           { type: string(255), notnull: true }
   relations:
-    SynonymGroup:
-      local:    synonym_group_id
-      foreign:  id
+    Groups:
+      class:	SynonymGroup
+      refClass:	PossibleWordSynonymGroup
+      local:    word_id
+      foreign:  synonym_group_id
       onDelete: CASCADE
       onUpdate: CASCADE

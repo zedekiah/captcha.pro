@@ -8,22 +8,40 @@
  * @property string $description
  * @property Doctrine_Collection $Word
  * @property Doctrine_Collection $WordSynonymGroup
+ * @property Doctrine_Collection $PossibleWord
+ * 
+ * @method string              getDescription()              Returns the current record's "description" value
+ * @method Doctrine_Collection getWord()                     Returns the current record's "Word" collection
+ * @method Doctrine_Collection getWordSynonymGroup()         Returns the current record's "WordSynonymGroup" collection
+ * @method Doctrine_Collection getPossibleWordSynonymGroup() Returns the current record's "PossibleWordSynonymGroup" collection
+ * @method Doctrine_Collection getValidation()               Returns the current record's "Validation" collection
+ * @method Doctrine_Collection getFailWord()                 Returns the current record's "FailWord" collection
+ * @method Doctrine_Collection getPossibleWord()             Returns the current record's "PossibleWord" collection
+ * @method SynonymGroup        setDescription()              Sets the current record's "description" value
+ * @method SynonymGroup        setWord()                     Sets the current record's "Word" collection
+ * @method SynonymGroup        setWordSynonymGroup()         Sets the current record's "WordSynonymGroup" collection
+ * @method SynonymGroup        setPossibleWordSynonymGroup() Sets the current record's "PossibleWordSynonymGroup" collection
+ * @method SynonymGroup        setValidation()               Sets the current record's "Validation" collection
+ * @method SynonymGroup        setFailWord()                 Sets the current record's "FailWord" collection
+ * @method SynonymGroup        setPossibleWord()             Sets the current record's "PossibleWord" collectionSynonymGroup
  * @property Doctrine_Collection $Validation
  * @property Doctrine_Collection $FailWord
  * @property Doctrine_Collection $PossibleWord
  * 
- * @method string              getDescription()      Returns the current record's "description" value
- * @method Doctrine_Collection getWord()             Returns the current record's "Word" collection
- * @method Doctrine_Collection getWordSynonymGroup() Returns the current record's "WordSynonymGroup" collection
- * @method Doctrine_Collection getValidation()       Returns the current record's "Validation" collection
- * @method Doctrine_Collection getFailWord()         Returns the current record's "FailWord" collection
- * @method Doctrine_Collection getPossibleWord()     Returns the current record's "PossibleWord" collection
- * @method SynonymGroup        setDescription()      Sets the current record's "description" value
- * @method SynonymGroup        setWord()             Sets the current record's "Word" collection
- * @method SynonymGroup        setWordSynonymGroup() Sets the current record's "WordSynonymGroup" collection
- * @method SynonymGroup        setValidation()       Sets the current record's "Validation" collection
- * @method SynonymGroup        setFailWord()         Sets the current record's "FailWord" collection
- * @method SynonymGroup        setPossibleWord()     Sets the current record's "PossibleWord" collection
+ * @method string              getDescription()              Returns the current record's "description" value
+ * @method Doctrine_Collection getWord()                     Returns the current record's "Word" collection
+ * @method Doctrine_Collection getWordSynonymGroup()         Returns the current record's "WordSynonymGroup" collection
+ * @method Doctrine_Collection getPossibleWordSynonymGroup() Returns the current record's "PossibleWordSynonymGroup" collection
+ * @method Doctrine_Collection getValidation()               Returns the current record's "Validation" collection
+ * @method Doctrine_Collection getFailWord()                 Returns the current record's "FailWord" collection
+ * @method Doctrine_Collection getPossibleWord()             Returns the current record's "PossibleWord" collection
+ * @method SynonymGroup        setDescription()              Sets the current record's "description" value
+ * @method SynonymGroup        setWord()                     Sets the current record's "Word" collection
+ * @method SynonymGroup        setWordSynonymGroup()         Sets the current record's "WordSynonymGroup" collection
+ * @method SynonymGroup        setPossibleWordSynonymGroup() Sets the current record's "PossibleWordSynonymGroup" collection
+ * @method SynonymGroup        setValidation()               Sets the current record's "Validation" collection
+ * @method SynonymGroup        setFailWord()                 Sets the current record's "FailWord" collection
+ * @method SynonymGroup        setPossibleWord()             Sets the current record's "PossibleWord" collection
  * 
  * @package    captcha
  * @subpackage model
@@ -54,6 +72,10 @@ abstract class BaseSynonymGroup extends sfDoctrineRecord
              'local' => 'id',
              'foreign' => 'synonym_group_id'));
 
+        $this->hasMany('PossibleWordSynonymGroup', array(
+             'local' => 'id',
+             'foreign' => 'synonym_group_id'));
+
         $this->hasMany('Validation', array(
              'local' => 'id',
              'foreign' => 'synonym_group_id'));
@@ -63,7 +85,8 @@ abstract class BaseSynonymGroup extends sfDoctrineRecord
              'foreign' => 'synonym_group_id'));
 
         $this->hasMany('PossibleWord', array(
-             'local' => 'id',
-             'foreign' => 'synonym_group_id'));
+             'refClass' => 'PossibleWordSynonymGroup',
+             'local' => 'synonym_group_id',
+             'foreign' => 'word_id'));
     }
 }
