@@ -27,8 +27,9 @@ class Captcha
             while(in_array($randImageNumber, $alreadyUsed)) {
                 $randImageNumber = rand(1, sfConfig::get('app_images_perWord')*$wordCount);
             }
-            $src = imagecreatefrompng(sfConfig::get('sf_root_dir').'/web/images/cache/'.$randGroupNumber.'_'.$randImageNumber.'.'.sfConfig::get('app_images_filetype'));
-            imagecopy($newImage, $src, $i*sfConfig::get('app_images_width'), 0, 0, 0, imagesx($src), imagesy($src));
+            $src = imagecreatefrompng(sfConfig::get('sf_root_dir').'/web/images/cache/'.$randGroupNumber.'_'.$randImageNumber.'.'.sfConfig::get('app_images_filetype'));	    
+	    $src = imagerotate($src, rand(20, 340), -1);
+	    imagecopy($newImage, $src, $i*sfConfig::get('app_images_width'), 0, 0, 0, imagesx($src), imagesy($src));
             imagedestroy($src);
             $alreadyUsed[] = $randImageNumber;
         }
