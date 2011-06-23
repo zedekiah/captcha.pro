@@ -16,13 +16,13 @@ class captchaActions extends sfActions
     public function executeGetImage()
     {
         $this->image = Captcha::generateImage();
-	$this->setLayout(false);
+        $this->setLayout(false);
     }
 
     public function executeDemo(sfWebRequest $request)
     {
         $this->captchaError = false;
-	$this->form = new DemoForm();
+        $this->form = new DemoForm();
         if( $request->isMethod('post'))
         {
             $hash = $request->getParameter('captcha_hash');
@@ -34,8 +34,8 @@ class captchaActions extends sfActions
             {
                 return 'Complete';
             }
-        }	    
-	    $this->getResponse()->addStylesheet('procaptcha-default');
+        }
+        $this->getResponse()->addStylesheet('procaptcha-default');
     }
 
     public function executeValidation(sfWebRequest $request)
@@ -45,45 +45,44 @@ class captchaActions extends sfActions
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
         $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word); 
         $this->forward404Unless($validation);
+        $synonymGroup = Doctrine_Core::getTable('SynonymGroup')->findOneById($validation->getSynonymGroupId());
         if($wordObject)
         {
-        $synonymGroup = Doctrine_Core::getTable('SynonymGroup')->findOneById($validation->getSynonymGroupId());
-        $this->result = Doctrine_Query::create()
-            ->select('word_id')
-            ->from('WordSynonymGroup')
-            ->where("synonym_group_id=$synonymGroup->id")
-            ->andWhere("word_id=$wordObject->id")
-            ->count();
+            $this->result = Doctrine_Query::create()
+                            ->select('word_id')
+                            ->from('WordSynonymGroup')
+                            ->where("synonym_group_id=$synonymGroup->id")
+                            ->andWhere("word_id=$wordObject->id")
+                            ->count();
         }
         else
         {
             $this->result = false;
         }
-        if(!$this->result)
+        if($this->result == false)
         {
             $failExist = Doctrine_Query::create()
                         ->select('id')
                         ->from('FailWord')
                         ->where("synonym_group_id=$synonymGroup->id")
-                        ->andWhere("word=$word")
+                        ->andWhere("new_word='$word'")
                         ->count();
-            if($failExist)
+            if($failExist > 0)
             {
-                $failWord = Doctrine_Core::getTable('FailWord')->findOneByWordAndSynonymGroupId(array($word, $synonymGroup->id));
+                $failWord = Doctrine_Core::getTable('FailWord')->findOneByNewWordAndSynonymGroupId($word, $synonymGroup->id);
                 $failWord->setCount($failWord->getCount()+1);
                 $failWord->save();
             }
             else
             {
-                $failWord = new failWord();
+                $failWord = new FailWord();
                 $failWord->setSynonymGroupId($synonymGroup->getId());
-                $failWord->setWord($word);
+                $failWord->setNewWord($word);
                 $failWord->setCount(1);
                 $failWord->save();
             }
             $this->forward404();
         }
-        $this->forward404Unless($this->result);
         Doctrine::getTable('Validation')->findBy('hash', $hash)->delete();
     }
 
