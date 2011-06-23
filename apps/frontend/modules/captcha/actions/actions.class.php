@@ -41,10 +41,10 @@ class captchaActions extends sfActions
     public function executeValidation(sfWebRequest $request)
     {
         $hash = $request->getParameter('hash');
-        $word = $request->getParameter('word');
+        $word = trim($request->getParameter('word'));
         $validation = Doctrine_Core::getTable('Validation')->findOneByHash($hash);
         $wordObject = Doctrine_Core::getTable('Word')->findOneByName($word); 
-        $this->forward404Unless($validation);
+        $this->forward404Unless($validation and strlen($word) > 0);
         $synonymGroup = Doctrine_Core::getTable('SynonymGroup')->findOneById($validation->getSynonymGroupId());
         if($wordObject)
         {
