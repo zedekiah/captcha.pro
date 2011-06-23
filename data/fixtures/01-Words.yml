@@ -29,3 +29,33 @@ Word:
   w10:
     name:	"авто"
     Groups:	[Car]
+  w11:
+    name:   "меч"
+    Groups: [Sword]
+  w12:
+    name:   "самолет"
+    Groups: [Airplane]
+  w13:
+    name:   "вода"
+    Groups: [Water]
+  w14:
+    name:   "жидкость"
+    Group:  [Water]
+  w15:
+    name:   "ноутбук"
+    Groups: [Notebook]
+  w16: 
+    name:   "ноут"
+    Groups: [Notebook]
+  w17:
+    name:   "часы"
+    Groups: [Clock]
+  w18:
+    name:   "хлеб"
+    Groups: [Bread]
+  w19:
+    name:   "батон"
+    Groups: [Bread]
+  w20:
+    name:   "нож"
+    Groups: [Knife]

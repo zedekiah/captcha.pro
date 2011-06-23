@@ -13,3 +13,17 @@ SynonymGroup:
     description:	"Цветок"
   Car:
     description:	"Авто"
+  Sword:
+    description:    "Меч"
+  Airplane:
+    description:    "Самолет"
+  Water:
+    description:    "Вода, жидкость"
+  Notebook:
+    description:    "Ноутбук"
+  Clock:
+    description:    "Часы"
+  Bread:
+    description:    "Хлеб"
+  Knife:
+    description:    "Нож"
