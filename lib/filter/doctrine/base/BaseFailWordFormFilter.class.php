@@ -13,12 +13,10 @@ abstract class BaseFailWordFormFilter extends BaseFormFilterDoctrine
   public function setup()
   {
     $this->setWidgets(array(
-      'synonym_group_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SynonymGroup'), 'add_empty' => true)),
       'count'            => new sfWidgetFormFilterInput(array('with_empty' => false)),
     ));
 
     $this->setValidators(array(
-      'synonym_group_id' => new sfValidatorDoctrineChoice(array('required' => false, 'model' => $this->getRelatedModelName('SynonymGroup'), 'column' => 'id')),
       'count'            => new sfValidatorSchemaFilter('text', new sfValidatorInteger(array('required' => false))),
     ));
 
@@ -40,7 +38,7 @@ abstract class BaseFailWordFormFilter extends BaseFormFilterDoctrine
   {
     return array(
       'id'               => 'Number',
-      'synonym_group_id' => 'ForeignKey',
+      'synonym_group_id' => 'Number',
       'new_word'         => 'Text',
       'count'            => 'Number',
     );
