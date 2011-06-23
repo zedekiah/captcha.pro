@@ -1,17 +1,15 @@
 SynonymGroup:
   Cats:
     description:	"Представители семейства кошачьих"
-  Head:
-    description:	"Голова"
-#  Jar:
-#    description:	"Банка"
+  Leg:
+    description:	"Нога"
+  Bank:
+    description:	"Банк"
   Tits:
     description:	"Сиськи, дойки и т.д."
   Hammer:
     description:	"Молоток"
-  Putin:
-    description:	"Путин"
-  Screw_drivers:
-    description:    "Отвертка - она и есть отвертка"
-  Guitars:
-    description:    "Гитары"
+  Flower:
+    description:	"Цветок"
+  Car:
+    description:	"Авто"

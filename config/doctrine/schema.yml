@@ -31,6 +31,7 @@ Validation:
     id:                 { type: integer(4), primary: true, autoincrement: true, unsigned: true }
     hash:               { type: string(255), notnull: true, primary: true }
     synonym_group_id:   { type: integer, notnull: true, primary: false }
+    created_at:					{ type: timestamp }
   relations:
     SynonymGroup:
       local:    synonym_group_id

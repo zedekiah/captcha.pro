@@ -18,12 +18,14 @@ abstract class BaseValidationForm extends BaseFormDoctrine
       'id'               => new sfWidgetFormInputHidden(),
       'hash'             => new sfWidgetFormInputHidden(),
       'synonym_group_id' => new sfWidgetFormDoctrineChoice(array('model' => $this->getRelatedModelName('SynonymGroup'), 'add_empty' => false)),
+      'created_at'       => new sfWidgetFormDateTime(),
     ));
 
     $this->setValidators(array(
       'id'               => new sfValidatorChoice(array('choices' => array($this->getObject()->get('id')), 'empty_value' => $this->getObject()->get('id'), 'required' => false)),
       'hash'             => new sfValidatorChoice(array('choices' => array($this->getObject()->get('hash')), 'empty_value' => $this->getObject()->get('hash'), 'required' => false)),
       'synonym_group_id' => new sfValidatorDoctrineChoice(array('model' => $this->getRelatedModelName('SynonymGroup'))),
+      'created_at'       => new sfValidatorDateTime(array('required' => false)),
     ));
 
     $this->widgetSchema->setNameFormat('validation[%s]');

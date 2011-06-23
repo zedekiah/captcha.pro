@@ -32,7 +32,7 @@ class Captcha
             imagedestroy($src);
             $alreadyUsed[] = $randImageNumber;
         }
-        $hash = md5(date('dmYhis'));
+        $hash = md5(date('dmYhis').'thisiscaptcha');
         imagepng($newImage, sfConfig::get('sf_root_dir').'/web/images/captcha/'.$hash.'.png', 9);
         $validation = new Validation();
         $validation->setHash($hash);
