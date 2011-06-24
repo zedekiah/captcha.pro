@@ -1,0 +1,13 @@
+<?php
+
+/**
+ * word module configuration.
+ *
+ * @package    captcha
+ * @subpackage word
+ * @author     Your name here
+ * @version    SVN: $Id: configuration.php 23810 2009-11-12 11:07:44Z Kris.Wallsmith $
+ */
+class wordGeneratorConfiguration extends BaseWordGeneratorConfiguration
+{
+}

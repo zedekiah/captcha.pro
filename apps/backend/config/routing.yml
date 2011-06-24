@@ -1,0 +1,43 @@
+synonym_group:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                SynonymGroup
+    module:               synonymgroup
+    prefix_path:          /synonymgroup
+    column:               id
+    with_wildcard_routes: true
+
+possible_word:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                PossibleWord
+    module:               possibleword
+    prefix_path:          /possibleword
+    column:               id
+    with_wildcard_routes: true
+
+word:
+  class: sfDoctrineRouteCollection
+  options:
+    model:                Word
+    module:               word
+    prefix_path:          /word
+    column:               id
+    with_wildcard_routes: true
+
+# You can find more information about this file on the symfony website:
+# http://www.symfony-project.org/reference/1_4/en/10-Routing
+
+# default rules
+homepage:
+  url:   /
+  param: { module: default, action: index }
+
+# generic rules
+# please, remove them by adding more specific rules
+default_index:
+  url:   /:module
+  param: { action: index }
+
+default:
+  url:   /:module/:action/*
